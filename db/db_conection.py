@@ -1,9 +1,21 @@
-import mysql.connector
+from sqlalchemy import create_engine
 
-def get_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Deadmau58$",
-        database="db_dublin_landing"
+
+def get_engine():
+
+    USER = "root"
+    PASSWORD = "Deadmau58$"
+    HOST = "localhost"
+    DATABASE = "db_dublin_landing"
+
+    connection_string = (
+        f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}/{DATABASE}"
     )
+
+    engine = create_engine(
+        connection_string,
+        pool_pre_ping=True,
+        future=True
+    )
+    
+    return engine

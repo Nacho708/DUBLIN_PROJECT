@@ -1,0 +1,4 @@
+
+"""
+pdf_generator package.
+"""

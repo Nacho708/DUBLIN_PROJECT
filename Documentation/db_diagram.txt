@@ -1,0 +1,221 @@
+//////////////////////////////////////////////////////
+// APNEA DATABASE
+//////////////////////////////////////////////////////
+
+Table patient_demographics {
+
+  Patient_ID varchar [pk]
+
+  Date_of_Birth date
+  Age int
+  Sex varchar
+
+  Height_cm float
+  Weight_kg float
+  BMI float
+
+  Neck_Circumference_cm float
+
+  Family_History_OSA boolean
+
+  Tobacco_Use boolean
+  Alcohol_Use boolean
+  Caffeine_Use boolean
+
+  Shift_Work boolean
+}
+
+Table patients {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Consultation_Date date
+  Clinic_Number varchar
+  Referring_Physician varchar
+
+  Insurance_Type varchar
+  Payment_Type varchar
+}
+
+Table patient_symptoms {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Snoring boolean
+  Witnessed_Apneas boolean
+  Nocturnal_Choking boolean
+  Insomnia boolean
+  Night_Awakenings boolean
+  Non_Restorative_Sleep boolean
+  Daytime_Sleepiness boolean
+  Nasal_Obstruction boolean
+  Dry_Mouth boolean
+  Morning_Headaches boolean
+  Jaw_Pain boolean
+  Teeth_Grinding boolean
+}
+
+Table medical_history {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Hypertension boolean
+  Diabetes boolean
+  Depression boolean
+  GERD boolean
+  Cancer boolean
+
+  Medication varchar
+  Surgery varchar
+  Allergies text
+}
+
+Table sleep_history {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Previous_Sleep_Study boolean
+  RLS boolean
+  Insomnia boolean
+  Parasomnias boolean
+  CPAP_Use boolean
+
+  Sleep_Position boolean
+  MFT boolean
+  Maxillofacial boolean
+  ENT_Surgery boolean
+
+  Medication_Sleep varchar
+}
+
+Table questionnaire_scores {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Epworth_Score int
+  ISI_Score int
+
+  QoL_Score float
+
+  SnoreLab_Score float
+  SnoreLab_Epic float
+}
+
+Table sleep_symptom_frequency {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Observed_Apnea tinyint
+  Morning_Headaches tinyint
+  Nighttime_Awakening tinyint
+  Nocturia tinyint
+  Nonrestorative_Sleep tinyint
+  EDS tinyint
+}
+
+Table snoring_assessment {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Snoring_Evolution tinyint
+  Snoring_Frequency tinyint
+  Snoring_Intensity tinyint
+
+  Dry_Mouth tinyint
+  Irritated_Throat tinyint
+  Nasal_Congestion tinyint
+  Tooth_Grinding tinyint
+}
+
+Table physical_exam {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Tonsil_Size tinyint
+  Friedman_Tongue tinyint
+  Uvula_Elongation tinyint
+  Lingual_Frenulum tinyint
+
+  Dental_Status text
+  Dental_Arch text
+
+  Jaw_Relation tinyint
+  Facial_Profile tinyint
+
+  ROM_Vertical float
+  ROM_AP float
+
+  GeorgeG_Max_Retruison float
+  GeorgeG_Max_Protrusion float
+
+  Linea_Alba boolean
+  Torus boolean
+  Worn_Teeth boolean
+  Muscle_Tenderness boolean
+  Joint_Sounds tinyint
+  Mouth_Breathing boolean
+}
+
+Table sleep_study {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  AHI decimal
+  AI decimal
+
+  Supine_AHI decimal
+  Time_Supine decimal
+
+  Hypoxic_Burden decimal
+
+  SaO2_Min decimal
+  SaO2_Mean decimal
+
+  CT90 decimal
+
+  Total_Sleep_Time decimal
+}
+
+Table cbct_measurements {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  CBCT_AP decimal
+  CBCT_RL decimal
+  CBCT_CSA decimal
+
+  CBCT_SoftPalate_Length decimal
+  CBCT_SoftPalate_Width decimal
+}
+
+Table treatment {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Device_Type varchar
+
+  Protrusion_Setting decimal
+  Vertical_Setting decimal
+
+  CPAP_Used boolean
+
+  Positional_Device varchar
+
+  Weight_Treatment boolean
+  Lifestyle_Modification boolean
+}
+
+Table followup {
+
+  Patient_ID varchar [pk, ref: > patient_demographics.Patient_ID]
+
+  Followup_Date date
+
+  Followup_AHI decimal
+
+  Compliance boolean
+
+  QoL_Score float
+
+  Adverse_Effects boolean
+}

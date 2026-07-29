@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Paciente</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h2>Datos del Paciente</h2>
+
+  <form id="formulario">
+
+    <label>Fecha de nacimiento</label>
+    <input type="date" name="date_of_birth" required>
+
+    <label>Sexo</label>
+    <select name="sex" required>
+      <option value="">Selecciona</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Altura (cm)</label>
+    <input type="number" name="height_cm" min="1" required>
+
+    <label>Peso (kg)</label>
+    <input type="number" name="weight_kg" min="1" required>
+
+    <label>Contorno cuello (cm)</label>
+    <input type="number" name="neck_circumference_cm" min="1" required>
+
+    <label>Historia familiar OSA</label>
+    <select name="family_history_osa">
+      <option value="1">Sí</option>
+      <option value="0">No</option>
+    </select>
+
+    <label>Tabaco</label>
+    <select name="tobacco_use">
+      <option value="1">Sí</option>
+      <option value="0">No</option>
+    </select>
+
+    <label>Alcohol</label>
+    <select name="alcohol_use">
+      <option value="1">Sí</option>
+      <option value="0">No</option>
+    </select>
+
+    <label>Cafeína</label>
+    <select name="caffeine_use">
+      <option value="1">Sí</option>
+      <option value="0">No</option>
+    </select>
+
+    <label>Trabajo por turnos</label>
+    <select name="shift_work">
+      <option value="1">Sí</option>
+      <option value="0">No</option>
+    </select>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div id="mensaje" class="success"></div>
+</div>
+
+<script>
+document.getElementById("formulario").onsubmit = async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+
+  const data = {
+    date_of_birth: form.date_of_birth.value,
+    sex: form.sex.value,
+    height_cm: Number(form.height_cm.value),
+    weight_kg: Number(form.weight_kg.value),
+    neck_circumference_cm: Number(form.neck_circumference_cm.value),
+    family_history_osa: Number(form.family_history_osa.value),
+    tobacco_use: Number(form.tobacco_use.value),
+    alcohol_use: Number(form.alcohol_use.value),
+    caffeine_use: Number(form.caffeine_use.value),
+    shift_work: Number(form.shift_work.value)
+  };
+
+  try {
+    const response = await fetch("/insert-patient", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      document.getElementById("mensaje").innerText = "Datos enviados correctamente ✅";
+      form.reset();
+    } else {
+      document.getElementById("mensaje").innerText = "Error al enviar ❌";
+    }
+
+  } catch (error) {
+    document.getElementById("mensaje").innerText = "Error de conexión ❌";
+  }
+};
+</script>
+
+</body>
+</html>
