@@ -2,6 +2,7 @@
 database_writer.py
 
 Writes mapped PDF data into the MySQL database.
+Uses UPSERT (INSERT ... ON DUPLICATE KEY UPDATE).
 """
 
 from sqlalchemy import text
@@ -25,10 +26,13 @@ INSERT_ORDER = [
     "snoring_assessment",
 ]
 
+
 class DatabaseWriter:
 
     def __init__(self):
         self.engine = get_engine()
+
+    # --------------------------------------------------
 
     def write(self, data: dict):
 
@@ -39,12 +43,15 @@ class DatabaseWriter:
                 if table_name not in data:
                     continue
 
-                self.insert_row(
+                self.upsert_row(
                     connection,
                     table_name,
                     data[table_name]
                 )
-    def insert_row(self, connection, table_name: str, row_data: dict):
+
+    # --------------------------------------------------
+
+    def upsert_row(self, connection, table_name: str, row_data: dict):
 
         columns = ", ".join(row_data.keys())
 
@@ -53,11 +60,20 @@ class DatabaseWriter:
             for column in row_data.keys()
         )
 
+        # Build UPDATE clause excluding Patient_ID
+        update_clause = ", ".join(
+            f"{column}=VALUES({column})"
+            for column in row_data.keys()
+            if column != "Patient_ID"
+        )
+
         query = text(
             f"""
             INSERT INTO {table_name}
             ({columns})
             VALUES ({placeholders})
+            ON DUPLICATE KEY UPDATE
+            {update_clause}
             """
         )
 
